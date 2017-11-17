@@ -36,8 +36,5 @@ func LoadConfig(filePath string) (Config, error) {
 	var config Config
 	json.Unmarshal(file, &config)
 
-	fmt.Println("LoadConfig")
-	fmt.Println("config:", config)
-
 	return config, nil
 }
