@@ -41,16 +41,15 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
-
-				controllerConfig := openframe.ControllerOptions{
+				options := openframe.ControllerOptions{
 					Username:  c.String("username"),
 					Password:  c.String("password"),
 					Frame:     c.String("frame"),
 					ConfigDir: c.String("config"),
 				}
 
-				frameController := openframe.Controller{}
-				err := frameController.Init(controllerConfig)
+				frameController := openframe.Controller{Options: options}
+				err := frameController.Init()
 				if err != nil {
 					log.Fatal(err)
 				}

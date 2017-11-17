@@ -2,9 +2,17 @@ package openframe
 
 import (
 	"fmt"
+	"github.com/akestner/openframe/openframe/responses"
+	"github.com/davecgh/go-spew/spew"
+	"gopkg.in/resty.v1"
 )
 
 type Controller struct {
+	Options   ControllerOptions
+	Config    Config
+	User      User
+	Frame     Frame
+	AuthToken string
 }
 
 type ControllerOptions struct {
@@ -14,30 +22,95 @@ type ControllerOptions struct {
 	ConfigDir string
 }
 
-func (controller *Controller) Init(options ControllerOptions) error {
-	fmt.Println("Controller.init()")
-	fmt.Println("options:", options)
+func (controller *Controller) Init() error {
+	fmt.Println("Controller.Init()")
 
-	filepaths, err := DefaultFilepaths(options.ConfigDir)
+	filepaths, err := DefaultFilepaths(controller.Options.ConfigDir)
 	if err != nil {
 		fmt.Println(err.Error())
+		return err
 	}
+
+	config, err := LoadConfig(filepaths.Config)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	controller.Config = config
+
+	frame, err := LoadFrame(filepaths.Frame)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	controller.Frame = frame
 
 	user, err := LoadUser(filepaths.User)
 	if err != nil {
 		fmt.Println(err.Error())
+		return err
 	}
-	controller.Login(user)
+	controller.User = user
 
-	//config := LoadConfig(filepaths.Config)
-	//frame := LoadFrame(filepaths.Frame)
+	authToken, userId, err := controller.authenticateUser(controller.User)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	controller.AuthToken = authToken
+	controller.User.Id = userId
+
+	pubSubUrl, err := controller.getUserConfig()
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	controller.Config.PubSubUrl = pubSubUrl
+	controller.Config.Save(filepaths.Config)
+
+	spew.Dump(controller)
 
 	return nil
 }
 
-func (controller *Controller) Login(user User) error {
-	fmt.Println("Controller.Login()")
-	fmt.Println("user:", user)
+func (controller *Controller) authenticateUser(user User) (string, string, error) {
+	fmt.Println("Controller.authenticateUser()")
 
-	return nil
+	response, err := resty.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(`
+			{
+				"username": "` + user.Username + `",
+				"password": "` + user.Password + `"
+			}
+		`).
+		SetResult(&responses.UserLogin{}).
+		Post(controller.Config.Network.ApiBaseUrl + "/v0/users/authenticateUser")
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return "", "", err
+	}
+
+	userLoginResponse := response.Result().(*responses.UserLogin)
+
+	return userLoginResponse.Id, userLoginResponse.UserId, nil
+}
+
+func (controller *Controller) getUserConfig() (string, error) {
+	fmt.Println("Controller.getUserConfig()")
+
+	response, err := resty.R().
+		SetHeader("Content-Type", "application/json").
+		SetAuthToken(controller.AuthToken).
+		SetResult(&responses.UserConfig{}).
+		Get(controller.Config.Network.ApiBaseUrl + "/v0/users/config")
+
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	return response.Result().(*responses.UserConfig).Config.PubSubUrl, nil
 }
