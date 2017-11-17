@@ -33,17 +33,27 @@ func main() {
 					Usage:  "Openframe.io frame name",
 					EnvVar: "OPENFRAME_FRAME",
 				},
+				cli.StringFlag{
+					Name:   "config, c",
+					Value:  openframe.ConfigDir(),
+					Usage:  "Openframe.io config directory",
+					EnvVar: "OPENFRAME_CONFIG",
+				},
 			},
 			Action: func(c *cli.Context) {
-				controllerConfig := openframe.ControllerConfig{
-					Username: c.String("username"),
-					Password: c.String("password"),
-					Frame:    c.String("frame"),
+
+				controllerConfig := openframe.ControllerOptions{
+					Username:  c.String("username"),
+					Password:  c.String("password"),
+					Frame:     c.String("frame"),
+					ConfigDir: c.String("config"),
 				}
 
 				frameController := openframe.Controller{}
 				err := frameController.Init(controllerConfig)
-				if err != nil { log.Fatal(err) }
+				if err != nil {
+					log.Fatal(err)
+				}
 			},
 		},
 	}

@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/akestner/Openframe",
+	"ImportPath": "github.com/akestner/openframe",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v79",
 	"Packages": [
