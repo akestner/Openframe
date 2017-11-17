@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Set up Go app. Run this script immediately after cloning the codebase.
+# https://github.com/thoughtbot/guides/tree/master/protocol
+
+# Exit if any subcommand fails
+set -e
+
+# Set up Go dependencies via Godep
+go get github.com/tools/godep && \
+godep restore
+
+# Set up configurable environment variables
+if [ ! -f .env ]; then
+  cp .sample.env .env
+fi
