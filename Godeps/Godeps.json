@@ -10,6 +10,24 @@
 			"ImportPath": "github.com/codegangsta/cli",
 			"Comment": "v1.12.0",
 			"Rev": "5db74198dee1cfe60cf06a611d03a420361baad6"
+		},
+		{
+			"ImportPath": "github.com/davecgh/go-spew/spew",
+			"Comment": "v1.1.0-9-gecdeabc",
+			"Rev": "ecdeabc65495df2dec95d7c4a4c3e021903035e5"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/go-homedir",
+			"Rev": "b8bc1bf767474819792c23f32d8286a45736f1c6"
+		},
+		{
+			"ImportPath": "golang.org/x/net/publicsuffix",
+			"Rev": "d9558e5c97f85372afee28cf2b6059d7d3818919"
+		},
+		{
+			"ImportPath": "gopkg.in/resty.v1",
+			"Comment": "v1.0",
+			"Rev": "9ac9c42358f7c3c69ac9f8610e8790d7c338e85d"
 		}
 	]
 }
