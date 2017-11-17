@@ -1,0 +1,15 @@
+{
+	"ImportPath": "github.com/akestner/Openframe",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v79",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "v1.12.0",
+			"Rev": "5db74198dee1cfe60cf06a611d03a420361baad6"
+		}
+	]
+}
