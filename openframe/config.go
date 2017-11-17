@@ -10,9 +10,9 @@ type Config struct {
 	Network struct {
 		ApiBaseUrl string `json:"api_base"`
 		AppBaseUrl string `json:"app_base"`
-		ApiUrl string `json:"api_url"`
+		ApiUrl     string `json:"api_url"`
 	}
-	Autoboot bool `json:"autoboot"`
+	Autoboot  bool   `json:"autoboot"`
 	PubSubUrl string `json:"pubsub_url"`
 }
 
