@@ -42,9 +42,8 @@ func main() {
 				}
 
 				frameController := openframe.Controller{}
-				if err := frameController.Init(controllerConfig); err != nil {
-					log.Fatal(err)
-				}
+				err := frameController.Init(controllerConfig)
+				if err != nil { log.Fatal(err) }
 			},
 		},
 	}
